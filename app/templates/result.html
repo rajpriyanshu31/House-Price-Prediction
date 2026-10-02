@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Prediction Result | House Price Predictor</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f4f7fb;
+            color: #1f2937;
+            padding: 30px;
+        }
+
+        .result-card {
+            width: 100%;
+            max-width: 800px;
+            background: white;
+            padding: 45px 35px;
+            border-radius: 22px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.10);
+        }
+
+        .header {
+            text-align: center;
+        }
+
+        .icon {
+            font-size: 55px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+
+        /* PRICE */
+
+        .price-box {
+            padding: 25px;
+            border-radius: 15px;
+            background: #f0f7ff;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .price-label {
+            color: #6b7280;
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        .price {
+            font-size: 38px;
+            font-weight: bold;
+        }
+
+        /* PROPERTY DETAILS */
+
+        .property-section {
+            margin-top: 30px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 18px;
+        }
+
+        .property-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .property-item {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        .property-label {
+            color: #6b7280;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .property-value {
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        /* MODEL PERFORMANCE */
+
+        .model-section {
+            margin-top: 35px;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .metric {
+            padding: 18px 10px;
+            background: #f9fafb;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .cv-box {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 12px;
+            color: #4b5563;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        /* FEATURE IMPORTANCE */
+
+        .importance-section {
+            margin-top: 35px;
+        }
+
+        .importance-subtitle {
+            text-align: center;
+            color: #6b7280;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+
+        .feature-row {
+            margin-bottom: 16px;
+        }
+
+        .feature-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 7px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 9px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #2563eb;
+            border-radius: 10px;
+        }
+
+        /* BUTTON */
+
+        .button-container {
+            text-align: center;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 13px 25px;
+            border-radius: 10px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-button:hover {
+            background: #1d4ed8;
+        }
+
+        /* NOTE */
+
+        .note {
+            margin-top: 25px;
+            color: #6b7280;
+            font-size: 13px;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 600px) {
+
+            .result-card {
+                padding: 35px 20px;
+            }
+
+            .property-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .price {
+                font-size: 30px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="result-card">
+
+        <!-- HEADER -->
+
+        <div class="header">
+
+            <div class="icon">
+                🏠
+            </div>
+
+            <h1>
+                Estimated House Price
+            </h1>
+
+            <p class="subtitle">
+                Your house price prediction is ready.
+            </p>
+
+        </div>
+
+
+        <!-- PREDICTED PRICE -->
+
+        <div class="price-box">
+
+            <div class="price-label">
+                Predicted Market Value
+            </div>
+
+            <div class="price">
+                ${{ price }}
+            </div>
+
+        </div>
+
+
+        <!-- PROPERTY DETAILS -->
+
+        <div class="property-section">
+
+            <h2 class="section-title">
+                Your Property Details
+            </h2>
+
+            <div class="property-grid">
+
+                <div class="property-item">
+                    <div class="property-label">
+                        Median Income (Annual)
+                    </div>
+                    <div class="property-value">
+                        ${{ "{:,.0f}".format(property_data.MedInc * 10000) }}
+                    </div>
+                </div>
+
+                <div class="property-item">
+                    <div class="property-label">
+                        House Age
+                    </div>
+                    <div class="property-value">
+                        {{ property_data.HouseAge }} years
+                    </div>
+                </div>
+
+                <div class="property-item">
+                    <div class="property-label">
+                        Average Rooms
+                    </div>
+                    <div class="property-value">
+                        {{ property_data.AveRooms }}
+                    </div>
+                </div>
+
+                <div class="property-item">
+                    <div class="property-label">
+                        Average Bedrooms
+                    </div>
+                    <div class="property-value">
+                        {{ property_data.AveBedrms }}
+                    </div>
+                </div>
+
+                <div class="property-item">
+                    <div class="property-label">
+                        Population
+                    </div>
+                    <div class="property-value">
+                        {{ property_data.Population }}
+                    </div>
+                </div>
+
+                <div class="property-item">
+                    <div class="property-label">
+                        Average Occupancy
+                    </div>
+                    <div class="property-value">
+                        {{ property_data.AveOccup }}
+                    </div>
+                </div>
+
+                <div class="property-item">
+                    <div class="property-label">
+                        Latitude
+                    </div>
+                    <div class="property-value">
+                        {{ property_data.Latitude }}
+                    </div>
+                </div>
+
+                <div class="property-item">
+                    <div class="property-label">
+                        Longitude
+                    </div>
+                    <div class="property-value">
+                        {{ property_data.Longitude }}
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- MODEL PERFORMANCE -->
+
+        <div class="model-section">
+
+            <h2 class="section-title">
+                Model Performance
+            </h2>
+
+            <div class="metrics-grid">
+
+                <div class="metric">
+
+                    <div class="metric-value">
+                        {{ "%.2f"|format(metrics.r2 * 100) }}%
+                    </div>
+
+                    <div class="metric-label">
+                        R² Score
+                    </div>
+
+                </div>
+
+
+                <div class="metric">
+
+                    <div class="metric-value">
+                        {{ "%.4f"|format(metrics.mae) }}
+                    </div>
+
+                    <div class="metric-label">
+                        MAE
+                    </div>
+
+                </div>
+
+
+                <div class="metric">
+
+                    <div class="metric-value">
+                        {{ "%.4f"|format(metrics.rmse) }}
+                    </div>
+
+                    <div class="metric-label">
+                        RMSE
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="cv-box">
+
+                5-Fold Cross-Validation RMSE:
+
+                <strong>
+                    {{ "%.4f"|format(metrics.cv_rmse) }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- FEATURE IMPORTANCE -->
+
+        <div class="importance-section">
+
+            <h2 class="section-title">
+                What Influences the Prediction?
+            </h2>
+
+            <p class="importance-subtitle">
+                Feature importance shows how much each input
+                contributes to the Random Forest model's decisions.
+            </p>
+
+
+            {% for feature, importance in feature_importance %}
+
+            <div class="feature-row">
+
+                <div class="feature-header">
+
+                    <span>
+                        {{ feature }}
+                    </span>
+
+                    <span>
+                        {{ "%.1f"|format(importance * 100) }}%
+                    </span>
+
+                </div>
+
+
+                <div class="progress-bar">
+
+                    <div
+                        class="progress-fill"
+                        style="width: {{ importance * 100 }}%;">
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- BUTTON -->
+
+        <div class="button-container">
+
+            <a href="/" class="back-button">
+                Predict Another House
+            </a>
+
+        </div>
+
+
+        <!-- DISCLAIMER -->
+
+        <p class="note">
+            This estimate is generated by a tuned Random Forest
+            machine learning model and should be treated as an estimate.
+        </p>
+
+    </div>
+
+</body>
+
+</html>

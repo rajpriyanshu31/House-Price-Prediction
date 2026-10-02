@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>House Price Predictor</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .header h1 {
+            font-size: 38px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #6b7280;
+            font-size: 17px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-group small {
+            color: #6b7280;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .form-group input {
+            padding: 13px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            width: 100%;
+        }
+
+        .form-group input:focus {
+            border-color: #2563eb;
+        }
+
+        .form-group input:invalid:not(:placeholder-shown) {
+            border-color: #dc2626;
+        }
+
+        .button-container {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #2563eb;
+            color: white;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .info {
+            margin-top: 25px;
+            padding: 18px;
+            background: #f9fafb;
+            border-radius: 12px;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        .validation-message {
+            display: none;
+            margin-top: 20px;
+            padding: 14px;
+            border-radius: 10px;
+            background: #fef2f2;
+            color: #b91c1c;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        @media (max-width: 700px) {
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 30px;
+            }
+
+            .card {
+                padding: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <h1>
+            🏠 House Price Predictor
+        </h1>
+
+        <p>
+            Machine Learning powered house price estimation
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <form
+            action="/predict"
+            method="POST"
+            id="predictionForm"
+        >
+
+            <div class="form-grid">
+
+
+                <!-- MEDIAN INCOME -->
+
+                <div class="form-group">
+
+                    <label for="MedInc">
+                        Median Income
+                    </label>
+
+                    <input
+                        type="number"
+                        id="MedInc"
+                        name="MedInc"
+                        step="any"
+                        min="0.4999"
+                        max="15.0001"
+                        placeholder="Example: 5.2"
+                        required
+                    >
+
+                    <small>
+                        Supported range: 0.4999 – 15.0001
+                    </small>
+
+                </div>
+
+
+                <!-- HOUSE AGE -->
+
+                <div class="form-group">
+
+                    <label for="HouseAge">
+                        House Age
+                    </label>
+
+                    <input
+                        type="number"
+                        id="HouseAge"
+                        name="HouseAge"
+                        step="any"
+                        min="1"
+                        max="52"
+                        placeholder="Example: 30"
+                        required
+                    >
+
+                    <small>
+                        Supported range: 1 – 52 years
+                    </small>
+
+                </div>
+
+
+                <!-- AVERAGE ROOMS -->
+
+                <div class="form-group">
+
+                    <label for="AveRooms">
+                        Average Rooms
+                    </label>
+
+                    <input
+                        type="number"
+                        id="AveRooms"
+                        name="AveRooms"
+                        step="any"
+                        min="0.846"
+                        max="141.91"
+                        placeholder="Example: 6.5"
+                        required
+                    >
+
+                    <small>
+                        Supported dataset range
+                    </small>
+
+                </div>
+
+
+                <!-- AVERAGE BEDROOMS -->
+
+                <div class="form-group">
+
+                    <label for="AveBedrms">
+                        Average Bedrooms
+                    </label>
+
+                    <input
+                        type="number"
+                        id="AveBedrms"
+                        name="AveBedrms"
+                        step="any"
+                        min="0.333"
+                        max="34.07"
+                        placeholder="Example: 1.2"
+                        required
+                    >
+
+                    <small>
+                        Supported dataset range
+                    </small>
+
+                </div>
+
+
+                <!-- POPULATION -->
+
+                <div class="form-group">
+
+                    <label for="Population">
+                        Population
+                    </label>
+
+                    <input
+                        type="number"
+                        id="Population"
+                        name="Population"
+                        step="any"
+                        min="3"
+                        max="35682"
+                        placeholder="Example: 1000"
+                        required
+                    >
+
+                    <small>
+                        Supported dataset range
+                    </small>
+
+                </div>
+
+
+                <!-- AVERAGE OCCUPANCY -->
+
+                <div class="form-group">
+
+                    <label for="AveOccup">
+                        Average Occupancy
+                    </label>
+
+                    <input
+                        type="number"
+                        id="AveOccup"
+                        name="AveOccup"
+                        step="any"
+                        min="0.69"
+                        max="1244"
+                        placeholder="Example: 3.0"
+                        required
+                    >
+
+                    <small>
+                        Supported dataset range
+                    </small>
+
+                </div>
+
+
+                <!-- LATITUDE -->
+
+                <div class="form-group">
+
+                    <label for="Latitude">
+                        Latitude
+                    </label>
+
+                    <input
+                        type="number"
+                        id="Latitude"
+                        name="Latitude"
+                        step="any"
+                        min="32.54"
+                        max="41.95"
+                        placeholder="Example: 37.88"
+                        required
+                    >
+
+                    <small>
+                        Supported range: 32.54 – 41.95
+                    </small>
+
+                </div>
+
+
+                <!-- LONGITUDE -->
+
+                <div class="form-group">
+
+                    <label for="Longitude">
+                        Longitude
+                    </label>
+
+                    <input
+                        type="number"
+                        id="Longitude"
+                        name="Longitude"
+                        step="any"
+                        min="-124.35"
+                        max="-114.31"
+                        placeholder="Example: -122.23"
+                        required
+                    >
+
+                    <small>
+                        Supported range: -124.35 – -114.31
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!-- VALIDATION MESSAGE -->
+
+            <div
+                class="validation-message"
+                id="validationMessage"
+            >
+                Please enter valid values within the supported
+                dataset ranges.
+            </div>
+
+
+            <!-- BUTTON -->
+
+            <div class="button-container">
+
+                <button type="submit">
+                    Predict House Price
+                </button>
+
+            </div>
+
+        </form>
+
+
+        <!-- MODEL INFORMATION -->
+
+        <div class="info">
+
+            <strong>About the model</strong>
+            <br>
+
+            This application uses a tuned Random Forest
+            regression model to estimate house prices based
+            on property and location features.
+
+            <br><br>
+
+            <strong>Input validation:</strong>
+            Values outside the supported dataset ranges
+            are automatically rejected before prediction.
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    const form = document.getElementById("predictionForm");
+    const validationMessage =
+        document.getElementById("validationMessage");
+
+
+    form.addEventListener("submit", function(event) {
+
+        if (!form.checkValidity()) {
+
+            event.preventDefault();
+
+            validationMessage.style.display = "block";
+
+            form.reportValidity();
+
+        } else {
+
+            validationMessage.style.display = "none";
+
+        }
+
+    });
+
+</script>
+
+</body>
+
+</html>
