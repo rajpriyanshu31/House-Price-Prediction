@@ -8,7 +8,7 @@ app = Flask(__name__)
 # Download/load trained model from Hugging Face
 MODEL_PATH = hf_hub_download(
     repo_id="rajpriyanshu31/house-price-prediction-model",
-    filename="house_price_model.pkl"
+    filename="house_price_model_small.pkl"
 )
 
 model_bundle = joblib.load(MODEL_PATH)
@@ -133,4 +133,3 @@ if __name__ == "__main__":
         port=5000,
         debug=True
     )
-    
