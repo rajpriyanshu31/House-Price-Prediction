@@ -1,10 +1,17 @@
 from flask import Flask, render_template, request
 import joblib
+from huggingface_hub import hf_hub_download
 
 app = Flask(__name__)
 
-# Load the trained model
-model_bundle = joblib.load("models/house_price_model.pkl")
+
+# Download/load trained model from Hugging Face
+MODEL_PATH = hf_hub_download(
+    repo_id="rajpriyanshu31/house-price-prediction-model",
+    filename="house_price_model.pkl"
+)
+
+model_bundle = joblib.load(MODEL_PATH)
 
 model = model_bundle["model"]
 features = model_bundle["features"]
@@ -121,4 +128,9 @@ def predict():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(
+        host="0.0.0.0",
+        port=5000,
+        debug=True
+    )
+    
